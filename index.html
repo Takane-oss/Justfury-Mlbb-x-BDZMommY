@@ -96,6 +96,54 @@ footer{border-top:1px solid var(--line);padding:25px 0;color:#827990;font-size:1
 </section>
 </main>
 <footer><span>© 2026 Justfury Mlbb x BDZMommY</span><span>Made for the MLBB community</span></footer>
+
+<script>
+const gallery = document.querySelector('.gallery');
+
+fetch('https://api.github.com/repos/Takane-oss/Justfury-Mlbb-x-BDZMommY/contents/arts')
+  .then(response => {
+    if (!response.ok) throw new Error('Не удалось загрузить арты');
+    return response.json();
+  })
+  .then(files => {
+    const images = files.filter(file =>
+      file.type === 'file' &&
+      /\.(png|jpe?g|webp|gif)$/i.test(file.name)
+    );
+
+    gallery.innerHTML = '';
+
+    if (images.length === 0) {
+      gallery.textContent = 'Пока нет артов';
+      return;
+    }
+
+    images.forEach(file => {
+      const tile = document.createElement('article');
+      tile.className = 'tile';
+
+      const img = document.createElement('img');
+      img.src = file.download_url;
+      img.alt = file.name;
+      img.loading = 'lazy';
+      img.style.cssText =
+        'width:100%;height:260px;object-fit:cover;display:block;';
+
+      const info = document.createElement('div');
+      info.className = 'tile-info';
+
+      const title = document.createElement('b');
+      title.textContent = file.name;
+
+      info.appendChild(title);
+      tile.append(img, info);
+      gallery.appendChild(tile);
+    });
+  })
+  .catch(() => {
+    gallery.textContent = 'Не удалось загрузить арты';
+  });
+</script>
 </div>
 </body>
 </html>
